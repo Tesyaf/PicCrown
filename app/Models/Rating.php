@@ -8,6 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Facades\Crypt;
 
+/**
+ * @property mixed $encrypted_comment
+ * @property-read Rating|null $parent
+ * @property-read \App\Models\Photo|null $photo
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Rating> $replies
+ * @property-read int|null $replies_count
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Rating newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rating newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rating query()
+ * @mixin \Eloquent
+ */
 class Rating extends Model
 {
     use HasFactory, HasUuids;

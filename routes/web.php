@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RatingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +28,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/photos/create', [PhotoController::class, 'create'])->name('photos.create');
+    Route::post('/photos', [PhotoController::class, 'store'])->name('photos.store');
+    Route::get('/photos/{photo}', [PhotoController::class, 'show'])->name('photos.show');
+    Route::get('/photos/{photo}/edit', [PhotoController::class, 'edit'])->name('photos.edit');
+    Route::put('/photos/{photo}', [PhotoController::class, 'update'])->name('photos.update');
+    Route::delete('/photos/{photo}', [PhotoController::class, 'destroy'])->name('photos.destroy');
+
+    Route::post('/photos/{photo}/ratings', [RatingController::class, 'store'])->name('ratings.store');
+    Route::delete('/ratings/{rating}', [RatingController::class, 'destroy'])->name('ratings.destroy');
+    Route::put('/ratings/{rating}', [RatingController::class, 'update'])->name('ratings.update');
 });
 
 require __DIR__.'/auth.php';
