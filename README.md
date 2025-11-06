@@ -31,7 +31,7 @@ php artisan key:generate
 
 Atur koneksi database di file .env:
 
-DB_CONNECTION=mysql
+DB_CONNECTION=psql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=piccrown
