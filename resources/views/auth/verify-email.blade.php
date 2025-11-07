@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi Email - PicCrown</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite('resources/css/app.css')
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -29,30 +29,45 @@
                 </div>
 
                 <!-- Form Body -->
-                <form action="#" method="POST" class="px-8 py-8">
+                <form action="{{ route('verification.verify') }}" method="POST" class="px-8 py-8">
+                    @csrf
+
                     <!-- Email Display -->
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email Anda</label>
                         <div class="w-full px-4 py-3 bg-amber-50 border-2 border-amber-200 rounded-lg text-gray-700 font-medium">
-                            user@example.com
+                            {{ auth()->user()->email }}
                         </div>
                     </div>
 
                     <!-- OTP Input -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-3">Kode Verifikasi (6 digit)</label>
+                        <label for="code" class="block text-sm font-medium text-gray-700 mb-3">Kode Verifikasi (6 digit)</label>
                         <div class="flex gap-2 justify-between">
-                            <input type="text" inputmode="numeric" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-amber-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 bg-yellow-50 transition-all" autofocus />
-                            <input type="text" inputmode="numeric" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-amber-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 bg-yellow-50 transition-all" />
-                            <input type="text" inputmode="numeric" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-amber-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 bg-yellow-50 transition-all" />
-                            <input type="text" inputmode="numeric" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-amber-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 bg-yellow-50 transition-all" />
-                            <input type="text" inputmode="numeric" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-amber-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 bg-yellow-50 transition-all" />
-                            <input type="text" inputmode="numeric" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-amber-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 bg-yellow-50 transition-all" />
+                            @for ($i = 0; $i < 6; $i++)
+                                <input 
+                                    type="text" 
+                                    inputmode="numeric" 
+                                    maxlength="1" 
+                                    class="w-12 h-12 text-center text-xl font-bold border-2 border-amber-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 bg-yellow-50 transition-all otp-input"
+                                    data-index="{{ $i }}"
+                                    @if($i === 0) autofocus @endif
+                                />
+                            @endfor
                         </div>
+                        <input type="hidden" id="code" name="code" />
                     </div>
 
+                    @error('code')
+                        <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
                     <!-- Verify Button -->
-                    <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <button 
+                        type="submit" 
+                        class="w-full py-3 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl">
                         Verifikasi Email
                     </button>
 
@@ -60,7 +75,7 @@
                     <div class="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
                         <p class="text-sm text-gray-700">
                             <span class="font-semibold text-orange-600">Tidak menerima kode?</span>
-                            <a href="#" class="text-orange-600 hover:text-orange-700 font-medium underline">
+                            <a href="{{ route('verification.resend') }}" class="text-orange-600 hover:text-orange-700 font-medium underline">
                                 Kirim ulang
                             </a>
                         </p>
@@ -82,7 +97,7 @@
             <div class="mt-6 text-center">
                 <p class="text-gray-600 text-sm">
                     Email salah? 
-                    <a href="#" class="text-orange-600 hover:text-orange-700 font-medium underline">
+                    <a href="{{ route('auth.login') }}" class="text-orange-600 hover:text-orange-700 font-medium underline">
                         Kembali ke login
                     </a>
                 </p>
@@ -91,12 +106,16 @@
     </div>
 
     <script>
-        const inputs = document.querySelectorAll('input[type="text"]');
+        // Handle OTP Input
+        const inputs = document.querySelectorAll('.otp-input');
+        const codeInput = document.getElementById('code');
+
         inputs.forEach((input, index) => {
             input.addEventListener('input', (e) => {
                 if (e.target.value && index < inputs.length - 1) {
                     inputs[index + 1].focus();
                 }
+                updateCodeInput();
             });
 
             input.addEventListener('keydown', (e) => {
@@ -104,7 +123,19 @@
                     inputs[index - 1].focus();
                 }
             });
+
+            input.addEventListener('keydown', (e) => {
+                // Hanya allow angka
+                if (!/[0-9]/.test(e.key) && e.key !== 'Backspace') {
+                    e.preventDefault();
+                }
+            });
         });
+
+        function updateCodeInput() {
+            const code = Array.from(inputs).map(input => input.value).join('');
+            codeInput.value = code;
+        }
     </script>
 </body>
 </html>
