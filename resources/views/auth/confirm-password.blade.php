@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirm Password</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        * { font-family: 'Montserrat', sans-serif; }
-    </style>
-</head>
-<body class="min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-amber-100 flex items-center justify-center p-4">
+@extends('layouts.app')
+
+@section('title', 'Lupa Password')
+
+@section('content')
     <div class="w-full max-w-md">
         <!-- Card Container -->
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border-t-4 border-orange-500">
@@ -107,5 +99,4 @@
             </p>
         </div>
     </div>
-</body>
-</html>
+@endsection
