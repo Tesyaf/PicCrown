@@ -54,6 +54,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/{user}/profile', [ProfileController::class, 'viewPublicProfile'])->name('profile.public');
 
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'dashboard'])->name('dashboard');
+
+    Route::post('/users/{user}/follow', [App\Http\Controllers\FollowController::class, 'store'])->name('users.follow');
+    Route::delete('/users/{user}/unfollow', [App\Http\Controllers\FollowController::class, 'destroy'])->name('users.unfollow');
 });
 
 require __DIR__.'/auth.php';
