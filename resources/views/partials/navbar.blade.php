@@ -1,20 +1,42 @@
-<nav class="flex justify-between items-center px-8 py-4 bg-white/40 backdrop-blur-md rounded-b-2xl shadow-lg">
-  <div class="flex items-center gap-6">
-    <a href="{{ url('/') }}" class="font-bold text-lg text-gray-800">📸 PicCrown</a>
-    @auth
-      <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-orange-500">Dashboard</a>
-      <a href="{{ route('photos.create') }}" class="text-gray-700 hover:text-orange-500">Upload Foto</a>
-      <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-orange-500">Profil</a>
-    @else
-      <a href="{{ route('login') }}" class="text-gray-700 hover:text-orange-500">Masuk</a>
-      <a href="{{ route('register') }}" class="text-gray-700 hover:text-orange-500">Daftar</a>
-    @endauth
-  </div>
+<nav class="sticky top-0 z-20 bg-white/60 backdrop-blur-md border-b border-amber-100/70 shadow-md">
+  <div class="mx-auto max-w-6xl px-6 h-14 flex items-center justify-between">
+    {{-- Logo --}}
+    <div class="flex items-center gap-2">
+      <a href="{{ url('/') }}" class="flex items-center gap-2 font-extrabold text-lg text-amber-600 hover:text-amber-700 transition-colors">
+        <img src="/images/PicCrownLogo.svg" alt="PicCrown" class="h-7 w-auto">
+        <span>PicCrown</span>
+      </a>
+    </div>
 
-  @auth
-    <form method="POST" action="{{ route('logout') }}">
-      @csrf
-      <button type="submit" class="text-sm text-gray-600 hover:text-red-500 font-semibold">Keluar</button>
-    </form>
-  @endauth
+    {{-- Menu kanan --}}
+    <div class="hidden sm:flex items-center gap-4 text-sm font-medium">
+      <a href="{{ route('about') }}"
+         class="transition-colors {{ request()->routeIs('about') ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500' }}">
+        Tentang
+      </a>
+      <a href="{{ route('contact') }}"
+         class="transition-colors {{ request()->routeIs('contact') ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500' }}">
+        Kontak
+      </a>
+
+      @auth
+        <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Dashboard</a>
+        <a href="{{ route('photos.create') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Upload Foto</a>
+        <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Profil</a>
+
+        <form method="POST" action="{{ route('logout') }}" class="inline">
+          @csrf
+          <button type="submit" class="text-gray-600 hover:text-red-500 font-semibold transition-colors">
+            Keluar
+          </button>
+        </form>
+      @else
+        <a href="{{ route('login') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Masuk</a>
+        <a href="{{ route('register') }}"
+           class="rounded-xl px-3 py-2 font-semibold bg-gradient-to-r from-yellow-300 via-amber-500 to-orange-500 text-white shadow-md hover:opacity-95 transition-all duration-150">
+          Daftar
+        </a>
+      @endauth
+    </div>
+  </div>
 </nav>
