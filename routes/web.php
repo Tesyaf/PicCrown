@@ -20,6 +20,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('auth.google');
+Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'callback']);
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -36,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/users/{user}/profile', [ProfileController::class, 'viewPublicProfile'])->name('profile.public');
 
     Route::get('/photos/create', [PhotoController::class, 'create'])->name('photos.create');
     Route::post('/photos', [PhotoController::class, 'store'])->name('photos.store');
