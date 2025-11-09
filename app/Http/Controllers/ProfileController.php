@@ -12,16 +12,6 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    
-    protected $keyType = 'string';
-    public $incrementing = false;
-
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        // tambahin kalau nanti pake: 'avatar', 'bio', 'location', 'website', dst.
-    ];
     public function edit(Request $request): View
     {
         return view('profile.edit', [
@@ -29,25 +19,50 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Validasi input
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'bio' => ['nullable', 'string', 'max:500'],
+            'location' => ['nullable', 'string', 'max:150'],
+            'avatar' => ['nullable', 'image', 'max:2048'],
+            'password' => ['nullable', 'confirmed', 'min:8'],
+        ]);
+
+        // Upload avatar jika ada
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar_url && file_exists(public_path('storage/' . $user->avatar_url))) {
+                unlink(public_path('storage/' . $user->avatar_url));
+            }
+            $validated['avatar_url'] = $request->file('avatar')->store('avatars', 'public');
         }
 
-        $request->user()->save();
+        // Simpan password hanya kalau diisi
+        if (!empty($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            // Pastikan password lama tetap dipakai
+            unset($validated['password']);
+        }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // Update field lain
+        $user->fill($validated);
+
+        // Reset verifikasi email kalau email berubah
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return Redirect::route('profile.edit')->with('status', 'Profil berhasil diperbarui!');
     }
 
-    /**
-     * Delete the user's account.
-     */
+
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
@@ -55,9 +70,7 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
         Auth::logout();
-
         $user->delete();
 
         $request->session()->invalidate();
@@ -68,40 +81,52 @@ class ProfileController extends Controller
 
     public function viewPublicProfile(User $user)
     {
-        $isOwner   = auth()->check() && auth()->id() === $user->id;
+        $isOwner = auth()->check() && auth()->id() === $user->id;
+        $photos = $user->photos()->latest()->take(12)->get();
 
-        // Ambil data yang diperlukan (contoh)
-        $photos    = $user->photos()->latest()->take(12)->get(); // id, title, url, avg_score...
-        $avgScore  = number_format($user->ratings()->avg('score') ?? 4.7, 1);
-        $rank      = $user->rank ?? '#42';
+        // Hitung skor rata-rata
+        $avgScore = round($user->photos()
+            ->join('ratings', 'ratings.photo_id', '=', 'photos.id')
+            ->avg('ratings.score'), 2) ?? 0;
 
-        // contoh: status follow
+        // Hitung ranking
+        $rank = User::select('users.id')
+            ->join('photos', 'photos.user_id', '=', 'users.id')
+            ->join('ratings', 'ratings.photo_id', '=', 'photos.id')
+            ->selectRaw('users.id, AVG(ratings.score) as avg_score')
+            ->groupBy('users.id')
+            ->orderByDesc('avg_score')
+            ->pluck('users.id')
+            ->search($user->id) + 1;
+
+        // Status follow
         $isFollowing = false;
-        $isFollowing = auth()->check() && !$isOwner
-            ? auth()->user()->following()->where('followed_user_id', $user->id)->exists()
-            : false;
+        if (auth()->check() && !$isOwner) {
+            $isFollowing = auth()->user()
+                ->following()
+                ->where('followed_user_id', $user->id)
+                ->exists();
+        }
 
-        return view('profile', compact('user','photos','avgScore','rank','isOwner','isFollowing'));
-    }
+        // Statistik tambahan
+        $totalLikes = $user->photos()
+            ->join('ratings', 'ratings.photo_id', '=', 'photos.id')
+            ->where('ratings.score', '>=', 4)
+            ->count();
 
-    public function following()
-    {
-        return $this->belongsToMany(
-            User::class,
-            'follows',
-            'follower_id',       // kolom pivot yang menunjuk ke user (this)
-            'followed_user_id'   // kolom pivot yang menunjuk ke user lain
-        )->withTimestamps();
-    }
+        $totalComments = $user->photos()
+            ->join('ratings', 'ratings.photo_id', '=', 'photos.id')
+            ->whereNotNull('ratings.encrypted_comment')
+            ->count();
 
-    // Users yang mengikuti user ini
-    public function followers()
-    {
-        return $this->belongsToMany(
-            User::class,
-            'follows',
-            'followed_user_id',  // kolom pivot yang menunjuk ke user (this)
-            'follower_id'        // kolom pivot yang menunjuk ke follower
-        )->withTimestamps();
+        $totalRatings = $user->photos()
+            ->join('ratings', 'ratings.photo_id', '=', 'photos.id')
+            ->count();
+
+        return view('profile.public', compact(
+            'user', 'photos', 'avgScore', 'rank',
+            'isOwner', 'isFollowing',
+            'totalLikes', 'totalComments', 'totalRatings'
+        ));
     }
 }

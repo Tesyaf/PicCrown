@@ -10,27 +10,16 @@
 
     {{-- Menu kanan --}}
     <div class="hidden sm:flex items-center gap-4 text-sm font-medium">
-      <a href="{{ route('about') }}"
-         class="transition-colors {{ request()->routeIs('about') ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500' }}">
-        Tentang
-      </a>
-      <a href="{{ route('contact') }}"
-         class="transition-colors {{ request()->routeIs('contact') ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500' }}">
-        Kontak
-      </a>
 
       @auth
         <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Dashboard</a>
         <a href="{{ route('photos.create') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Upload Foto</a>
         <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Profil</a>
-
-        <form method="POST" action="{{ route('logout') }}" class="inline">
-          @csrf
-          <button type="submit" class="text-gray-600 hover:text-red-500 font-semibold transition-colors">
-            Keluar
-          </button>
-        </form>
       @else
+        <a href="{{ route('about') }}"
+          class="transition-colors {{ request()->routeIs('about') ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500' }}">
+          Tentang
+        </a>
         <a href="{{ route('login') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Masuk</a>
         <a href="{{ route('register') }}"
            class="rounded-xl px-3 py-2 font-semibold bg-gradient-to-r from-yellow-300 via-amber-500 to-orange-500 text-white shadow-md hover:opacity-95 transition-all duration-150">

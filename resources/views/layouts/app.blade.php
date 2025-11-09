@@ -10,7 +10,11 @@
   <script src="https://kit.fontawesome.com/2a3d3dfcfb.js" crossorigin="anonymous"></script>
 </head>
 <body class="min-h-screen flex flex-col bg-gradient-to-br from-amber-50 to-yellow-100">
-  @include('partials.navbar')
+  @if (!Request::is('dashboard'))
+    <nav>
+      @include('partials.navbar')
+    </nav>
+  @endif
 
   @include('partials.alerts')
 

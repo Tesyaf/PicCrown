@@ -4,6 +4,8 @@ use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RatingController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +21,18 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::post('/email/verify', [VerifyEmailController::class, 'verify'])
+    ->middleware('auth')
+    ->name('verification.verify');
+
+Route::get('/email/verify/resend', [VerifyEmailController::class, 'resend'])
+    ->middleware('auth')
+    ->name('verification.resend');
 
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('auth.google');
 Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'callback']);
@@ -39,7 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/users/{user}/profile', [ProfileController::class, 'viewPublicProfile'])->name('profile.public');
+    Route::get('/users/{user}', [ProfileController::class, 'viewPublicProfile'])->name('users.show');
 
     Route::get('/photos/create', [PhotoController::class, 'create'])->name('photos.create');
     Route::post('/photos', [PhotoController::class, 'store'])->name('photos.store');
@@ -53,7 +67,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/ratings/{rating}', [RatingController::class, 'update'])->name('ratings.update');
     Route::get('/users/{user}/profile', [ProfileController::class, 'viewPublicProfile'])->name('profile.public');
 
-    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
     Route::post('/users/{user}/follow', [App\Http\Controllers\FollowController::class, 'store'])->name('users.follow');
     Route::delete('/users/{user}/unfollow', [App\Http\Controllers\FollowController::class, 'destroy'])->name('users.unfollow');

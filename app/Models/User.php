@@ -39,6 +39,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar_url',
+        'bio',
+        'location',
+        'rank',
     ];
 
     /**
@@ -68,4 +72,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Rating::class);
     }
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'followed_user_id', 'follower_id')->withTimestamps();
+    }
+
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followed_user_id')->withTimestamps();
+    }
+
 }
