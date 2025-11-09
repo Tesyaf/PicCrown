@@ -54,7 +54,7 @@
               <span class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
             </div>
             <p class="mt-2 text-gray-700">
-              {{ decrypt($comment->encrypted_comment) }}
+              {{ $comment->encrypted_comment }}
             </p>
           </div>
 
@@ -67,7 +67,7 @@
                     <p class="font-medium text-gray-800">{{ $reply->user->name ?? 'Anonim' }}</p>
                     <span class="text-xs text-gray-500">{{ $reply->created_at->diffForHumans() }}</span>
                   </div>
-                  <p class="mt-1 text-gray-700">{{ decrypt($reply->encrypted_comment) }}</p>
+                  <p class="mt-1 text-gray-700">{{ $reply->encrypted_comment }}</p>
                 </div>
               @endforeach
             </div>
@@ -83,7 +83,7 @@
         <form action="{{ route('ratings.store', $photo->id) }}" method="POST" class="space-y-4">
           @csrf
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Nilai (1–5)</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Nilai (1-5)</label>
             <select name="score" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-400 outline-none">
               <option value="">Tanpa nilai</option>
               @for ($i = 1; $i <= 5; $i++)

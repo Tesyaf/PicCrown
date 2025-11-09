@@ -41,7 +41,7 @@ class RatingController extends Controller
             'encrypted_comment' => $commentInput, // Input mentah (Mutator akan mengenkripsi)
         ]);
 
-        return back()->with('status', 'Rating atau komentar Anda berhasil ditambahkan!')->fragment('comments');
+        return back()->with('status', 'Rating atau komentar Anda berhasil ditambahkan!')->withFragment('comments');
     }
 
     public function update(Request $request, Rating $rating)

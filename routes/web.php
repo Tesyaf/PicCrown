@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/ratings/{rating}', [RatingController::class, 'destroy'])->name('ratings.destroy');
     Route::put('/ratings/{rating}', [RatingController::class, 'update'])->name('ratings.update');
     Route::get('/users/{user}/profile', [ProfileController::class, 'viewPublicProfile'])->name('profile.public');
+
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'dashboard'])->name('dashboard');
 });
 
 require __DIR__.'/auth.php';
