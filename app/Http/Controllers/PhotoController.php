@@ -29,7 +29,8 @@ class PhotoController extends Controller
             'user_id' => Auth::id(),
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'encrypted_path' => $path,
+            'encrypted_path' => '/storage/' . $path,
+
         ]);
 
         return redirect()->route('photos.show', $photo)->with('status', 'Foto berhasil diunggah!');

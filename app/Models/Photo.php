@@ -9,16 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Crypt;
 
-/**
- * @property mixed $encrypted_path
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Rating> $ratings
- * @property-read int|null $ratings_count
- * @property-read \App\Models\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder|Photo newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Photo newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Photo query()
- * @mixin \Eloquent
- */
 class Photo extends Model
 {
     use HasFactory, HasUuids;
@@ -35,21 +25,35 @@ class Photo extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function ratings() : HasMany
+    public function ratings(): HasMany
     {
         return $this->hasMany(Rating::class);
     }
+
+    // Setter → mengenkripsi sebelum disimpan
     public function setEncryptedPathAttribute($value)
     {
         $this->attributes['encrypted_path'] = Crypt::encryptString($value);
     }
+
+    // Getter → mendekripsi sebelum digunakan
     public function getEncryptedPathAttribute($value)
     {
         try {
-            return Crypt::encryptString($value);
+            return Crypt::decryptString($value);
         } catch (DecryptException $e) {
             logger()->error("Dekripsi path foto gagal: " . $this->id);
-            return ''; 
+            return '';
+        }
+    }
+
+    public function getEncryptedDescriptionAttribute($value)
+    {
+        try {
+            return Crypt::decryptString($value);
+        } catch (DecryptException $e) {
+            logger()->error("Dekripsi deskripsi foto gagal: " . $this->id);
+            return '';
         }
     }
 }

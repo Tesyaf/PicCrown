@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('layouts.app')
 
 @section('title', 'Login')
 
@@ -14,8 +14,12 @@
     <!-- Glassmorphic Card -->
     <div class="backdrop-blur-xl bg-white/30 border border-white/40 rounded-2xl shadow-2xl p-8 hover:shadow-3xl transition-all duration-500">
       
-      <!-- Login Form -->
-      <form method="POST" action="{{ route('login') }}" class="space-y-6">
+      @if (session('status'))
+        <div class="mb-4 p-4 rounded-lg bg-green-50/80 border border-green-200">
+          <p class="text-green-700 text-sm">{{ session('status') }}</p>
+        </div>
+      @endif
+    <form method="POST" action="{{ route('login') }}" class="space-y-6">
         @csrf
 
         <!-- Email Input -->
@@ -38,18 +42,46 @@
         </div>
 
         <!-- Password Input -->
-        <div class="space-y-2">
+        <div class="space-y-2" x-data="{ show: false }">
           <label for="password" class="block text-sm font-semibold text-gray-800">
             Password
           </label>
-          <input 
-            type="password" 
-            name="password" 
-            id="password"
-            required
-            class="w-full px-4 py-3 bg-white/40 backdrop-blur-md border border-white/50 rounded-lg focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-300/50 focus:bg-white/50 transition-all duration-300 text-gray-800 placeholder-gray-600"
-            placeholder="masukkan password Anda"
-          >
+
+          <div class="relative">
+            <!-- Input Password -->
+            <input 
+              :type="show ? 'text' : 'password'"
+              name="password"
+              id="password"
+              required
+              placeholder="masukkan password Anda"
+              class="w-full px-4 py-3 pr-10 bg-white/40 backdrop-blur-md border border-white/50 rounded-lg focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-300/50 focus:bg-white/50 transition-all duration-300 text-gray-800 placeholder-gray-600"
+              autocomplete="current-password"
+            >
+
+            <!-- Tombol Toggle Show/Hide -->
+            <button 
+              type="button"
+              @click="show = !show"
+              class="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-orange-600 transition-colors"
+              tabindex="-1"
+            >
+              <template x-if="!show">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </template>
+
+              <template x-if="show">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 012.031-3.362M6.228 6.228A9.97 9.97 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.978 9.978 0 01-4.208 5.337M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18" />
+                </svg>
+              </template>
+            </button>
+          </div>
+
           @error('password')
             <span class="text-red-500 text-sm font-medium">{{ $message }}</span>
           @enderror
@@ -57,7 +89,7 @@
 
         <!-- Remember Me & Forgot Password -->
         <div class="flex items-center justify-between">
-          <label class="flex items-center space-x-2 cursor-pointer group">
+          <label for="remember" class="flex items-center space-x-2 cursor-pointer group">
             <input 
               type="checkbox" 
               name="remember" 
@@ -65,7 +97,7 @@
               class="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-300 cursor-pointer"
             >
             <span class="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">Ingat saya</span>
-          </label>
+          </label>                                              
           <a href="{{ route('password.request') }}" class="text-sm text-orange-600 hover:text-orange-700 font-medium transition-colors">
             Lupa password?
           </a>

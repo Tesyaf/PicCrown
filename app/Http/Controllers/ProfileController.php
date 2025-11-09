@@ -57,4 +57,14 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function viewPublicProfile(\App\Models\User $user): View
+    {
+        $photos = $user->photos()->withCount('ratings')->latest()->paginate(10);
+
+        return view('profile.public', [
+            'profileUser' => $user,
+            'photos' => $photos,
+        ]);
+    }
 }

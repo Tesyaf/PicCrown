@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('user_id');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('encrypted_path');
+            $table->text('encrypted_path');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

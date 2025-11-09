@@ -1,6 +1,6 @@
-@extends('layouts.guest') 
+@extends('layouts.app') 
 
-@section('title', 'Lupa Password')
+@section('title', 'Daftar Akun Baru')
 
 @section('content')
 <!-- Animated Blur Circles -->
@@ -17,44 +17,39 @@
 
     <!-- Glassmorphic Card -->
     <div class="backdrop-blur-xl bg-white/30 border border-white/40 rounded-3xl p-8 shadow-2xl">
-        <form class="space-y-5">
-            <!-- Full Name -->
+        <form method="POST" action="{{ route('register') }}" class="space-y-5">
+            @csrf
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
-                <input type="text" placeholder="Masukkan nama lengkap Anda"
+                <input type="text" name="name" placeholder="Nama lengkap"
                     class="w-full px-4 py-3 rounded-xl backdrop-blur-md bg-white/40 border border-white/50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:bg-white/60 transition-all duration-300">
             </div>
 
-            <!-- Email -->
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                <input type="email" placeholder="nama@example.com"
+                <input type="email" name="email" placeholder="nama@gmail.com"
                     class="w-full px-4 py-3 rounded-xl backdrop-blur-md bg-white/40 border border-white/50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:bg-white/60 transition-all duration-300">
             </div>
 
-            <!-- Password -->
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                <input type="password" placeholder="Minimal 8 karakter"
+                <input type="password" name="password" placeholder="Minimal 8 karakter"
                     class="w-full px-4 py-3 rounded-xl backdrop-blur-md bg-white/40 border border-white/50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:bg-white/60 transition-all duration-300">
             </div>
 
-            <!-- Confirm Password -->
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
-                <input type="password" placeholder="Ulangi password Anda"
+                <input type="password" name="password_confirmation" placeholder="Ulangi password Anda"
                     class="w-full px-4 py-3 rounded-xl backdrop-blur-md bg-white/40 border border-white/50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:bg-white/60 transition-all duration-300">
             </div>
 
-            <!-- Terms -->
             <div class="flex items-start gap-3 pt-2">
-                <input type="checkbox" id="terms" class="mt-1 w-5 h-5 rounded border-gray-300 text-orange-500 focus:ring-orange-400">
+                <input type="checkbox" id="terms" required class="mt-1 w-5 h-5 rounded border-gray-300 text-orange-500 focus:ring-orange-400">
                 <label for="terms" class="text-sm text-gray-700">
                     Saya setuju dengan <a href="#" class="text-orange-500 hover:text-orange-600 font-semibold">Syarat & Ketentuan</a>
                 </label>
             </div>
 
-            <!-- Submit Button -->
             <button type="submit"
                 class="w-full py-3 mt-6 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold rounded-xl hover:from-orange-500 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Daftar Sekarang

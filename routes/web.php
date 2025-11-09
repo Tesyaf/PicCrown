@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/photos/{photo}/ratings', [RatingController::class, 'store'])->name('ratings.store');
     Route::delete('/ratings/{rating}', [RatingController::class, 'destroy'])->name('ratings.destroy');
     Route::put('/ratings/{rating}', [RatingController::class, 'update'])->name('ratings.update');
+    Route::get('/users/{user}/profile', [ProfileController::class, 'viewPublicProfile'])->name('profile.public');
 });
 
 require __DIR__.'/auth.php';

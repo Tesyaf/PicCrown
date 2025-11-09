@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('layouts.app')
 
 @section('title', 'Reset Password')
 
@@ -23,52 +23,50 @@
             <!-- Reset Password Form -->
             <form method="POST" action="{{ route('password.update') }}" class="space-y-6">
                 @csrf
+                @method('PUT')
                 <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
                 <!-- Email Input -->
                 <div class="relative">
                     <label for="email" class="block text-sm font-medium text-gray-800 mb-2">Email Address</label>
-                    <input 
-                        type="email" 
-                        id="email" 
+                    <input
+                        type="email"
+                        id="email"
                         name="email"
                         value="{{ old('email', $request->email) }}"
-                        required 
+                        required
                         disabled
                         class="w-full px-4 py-3 backdrop-blur-sm bg-white/50 border border-orange-200/50 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:border-orange-400 focus:bg-white/70 transition duration-200"
-                        placeholder="your@email.com"
-                    >
+                        placeholder="your@email.com">
                 </div>
 
                 <!-- Password Input -->
                 <div class="relative">
                     <label for="password" class="block text-sm font-medium text-gray-800 mb-2">Password Baru</label>
-                    <input 
-                        type="password" 
-                        id="password" 
+                    <input
+                        type="password"
+                        id="password"
                         name="password"
-                        required 
+                        required
                         class="w-full px-4 py-3 backdrop-blur-sm bg-white/50 border border-orange-200/50 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:border-orange-400 focus:bg-white/70 transition duration-200"
-                        placeholder="Masukkan password baru"
-                    >
+                        placeholder="Masukkan password baru">
                     @error('password')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Confirm Password Input -->
                 <div class="relative">
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-800 mb-2">Konfirmasi Password</label>
-                    <input 
-                        type="password" 
-                        id="password_confirmation" 
+                    <input
+                        type="password"
+                        id="password_confirmation"
                         name="password_confirmation"
-                        required 
+                        required
                         class="w-full px-4 py-3 backdrop-blur-sm bg-white/50 border border-orange-200/50 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:border-orange-400 focus:bg-white/70 transition duration-200"
-                        placeholder="Konfirmasi password baru"
-                    >
+                        placeholder="Konfirmasi password baru">
                     @error('password_confirmation')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -76,19 +74,18 @@
                 <div class="bg-orange-50/50 backdrop-blur-sm border border-orange-200/50 rounded-lg p-4">
                     <p class="text-sm text-gray-700">
                         <span class="font-semibold">Password harus:</span>
-                        <ul class="mt-2 space-y-1 text-xs text-gray-600">
-                            <li>• Minimal 8 karakter</li>
-                            <li>• Kombinasi huruf besar dan kecil</li>
-                            <li>• Minimal 1 angka dan 1 karakter khusus</li>
-                        </ul>
+                    <ul class="mt-2 space-y-1 text-xs text-gray-600">
+                        <li>• Minimal 8 karakter</li>
+                        <li>• Kombinasi huruf besar dan kecil</li>
+                        <li>• Minimal 1 angka dan 1 karakter khusus</li>
+                    </ul>
                     </p>
                 </div>
 
                 <!-- Submit Button -->
-                <button 
+                <button
                     type="submit"
-                    class="w-full px-4 py-3 mt-8 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-semibold rounded-lg shadow-lg transition duration-200 transform hover:scale-105 active:scale-95"
-                >
+                    class="w-full px-4 py-3 mt-8 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-semibold rounded-lg shadow-lg transition duration-200 transform hover:scale-105 active:scale-95">
                     Reset Password
                 </button>
             </form>
