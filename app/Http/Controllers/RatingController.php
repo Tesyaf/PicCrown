@@ -41,7 +41,7 @@ class RatingController extends Controller
             'encrypted_comment' => $commentInput, // Input mentah (Mutator akan mengenkripsi)
         ]);
 
-        return back()->with('status', 'Rating atau komentar Anda berhasil ditambahkan!')->withFragment('comments');
+        return back()->with('success', 'Rating atau komentar Anda berhasil ditambahkan!')->withFragment('comments');
     }
 
     public function update(Request $request, Rating $rating)
@@ -72,7 +72,7 @@ class RatingController extends Controller
             'encrypted_comment' => $commentInput, 
         ]);
 
-        return back()->with('status', 'Komentar/Rating berhasil diperbarui.')->withFragment('comments');
+        return back()->with('success', 'Komentar/Rating berhasil diperbarui.')->withFragment('comments');
     }
 
     public function destroy(Rating $rating)
@@ -85,6 +85,6 @@ class RatingController extends Controller
         // Karena ada relasi cascade pada parent_id, semua balasan (jika ada) akan ikut terhapus.
         $rating->delete(); 
 
-        return back()->with('status', 'Komentar berhasil dihapus.')->withFragment('comments');
+        return back()->with('success', 'Komentar berhasil dihapus.')->withFragment('comments');
     }
 }

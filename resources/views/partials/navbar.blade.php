@@ -10,20 +10,21 @@
 
     {{-- Menu desktop --}}
     <div class="hidden sm:flex items-center gap-4 text-sm font-medium">
+      <a href="{{ route('contact') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Kontak</a>
       @auth
-        <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Dashboard</a>
-        <a href="{{ route('photos.create') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Upload Foto</a>
-        <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Profil</a>
+      <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Dashboard</a>
+      <a href="{{ route('photos.create') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Upload Foto</a>
+      <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Profil</a>
       @else
-        <a href="{{ route('about') }}"
-          class="transition-colors {{ request()->routeIs('about') ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500' }}">
-          Tentang
-        </a>
-        <a href="{{ route('login') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Masuk</a>
-        <a href="{{ route('register') }}"
-           class="rounded-xl px-3 py-2 font-semibold bg-gradient-to-r from-yellow-300 via-amber-500 to-orange-500 text-white shadow-md hover:opacity-95 transition-all duration-150">
-          Daftar
-        </a>
+      <a href="{{ route('about') }}"
+        class="transition-colors {{ request()->routeIs('about') ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500' }}">
+        Tentang
+      </a>
+      <a href="{{ route('login') }}" class="text-gray-700 hover:text-orange-500 transition-colors">Masuk</a>
+      <a href="{{ route('register') }}"
+        class="rounded-xl px-3 py-2 font-semibold bg-gradient-to-r from-yellow-300 via-amber-500 to-orange-500 text-white shadow-md hover:opacity-95 transition-all duration-150">
+        Daftar
+      </a>
       @endauth
     </div>
 
@@ -42,28 +43,29 @@
 
   {{-- Menu dropdown (mobile) --}}
   <div x-show="open" @click.away="open = false"
-       x-transition:enter="transition ease-out duration-200"
-       x-transition:enter-start="opacity-0 -translate-y-2"
-       x-transition:enter-end="opacity-100 translate-y-0"
-       x-transition:leave="transition ease-in duration-150"
-       x-transition:leave-start="opacity-100 translate-y-0"
-       x-transition:leave-end="opacity-0 -translate-y-2"
-       class="sm:hidden bg-white/95 backdrop-blur-md border-t border-amber-100/70 shadow-md">
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0 -translate-y-2"
+    x-transition:enter-end="opacity-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100 translate-y-0"
+    x-transition:leave-end="opacity-0 -translate-y-2"
+    class="sm:hidden bg-white/95 backdrop-blur-md border-t border-amber-100/70 shadow-md">
     <div class="px-6 py-4 space-y-3 text-sm font-medium">
+      <a href="{{ route('contact') }}" class="block text-gray-700 hover:text-orange-500 transition-colors">Kontak</a>
       @auth
-        <a href="{{ route('dashboard') }}" class="block text-gray-700 hover:text-orange-500 transition-colors">Dashboard</a>
-        <a href="{{ route('photos.create') }}" class="block text-gray-700 hover:text-orange-500 transition-colors">Upload Foto</a>
-        <a href="{{ route('profile.edit') }}" class="block text-gray-700 hover:text-orange-500 transition-colors">Profil</a>
+      <a href="{{ route('dashboard') }}" class="block text-gray-700 hover:text-orange-500 transition-colors">Dashboard</a>
+      <a href="{{ route('photos.create') }}" class="block text-gray-700 hover:text-orange-500 transition-colors">Upload Foto</a>
+      <a href="{{ route('profile.edit') }}" class="block text-gray-700 hover:text-orange-500 transition-colors">Profil</a>
       @else
-        <a href="{{ route('about') }}"
-          class="block transition-colors {{ request()->routeIs('about') ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500' }}">
-          Tentang
-        </a>
-        <a href="{{ route('login') }}" class="block text-gray-700 hover:text-orange-500 transition-colors">Masuk</a>
-        <a href="{{ route('register') }}"
-           class="block text-center rounded-xl px-3 py-2 font-semibold bg-gradient-to-r from-yellow-300 via-amber-500 to-orange-500 text-white shadow-md hover:opacity-95 transition-all duration-150">
-          Daftar
-        </a>
+      <a href="{{ route('about') }}"
+        class="block transition-colors {{ request()->routeIs('about') ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500' }}">
+        Tentang
+      </a>
+      <a href="{{ route('login') }}" class="block text-gray-700 hover:text-orange-500 transition-colors">Masuk</a>
+      <a href="{{ route('register') }}"
+        class="block text-center rounded-xl px-3 py-2 font-semibold bg-gradient-to-r from-yellow-300 via-amber-500 to-orange-500 text-white shadow-md hover:opacity-95 transition-all duration-150">
+        Daftar
+      </a>
       @endauth
     </div>
   </div>

@@ -7,7 +7,7 @@
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <script src="https://kit.fontawesome.com/2a3d3dfcfb.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body class="min-h-screen flex flex-col bg-gradient-to-br from-amber-50 to-yellow-100">
   @if (!Request::is('dashboard'))

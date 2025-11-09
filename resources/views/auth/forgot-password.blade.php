@@ -82,11 +82,6 @@
         </p>
       </div>
     </div>
-
-    <!-- Footer -->
-    <p class="text-center text-amber-700 text-xs mt-6">
-      © {{ date('Y') }} PicCrown. Semua hak dilindungi.
-    </p>
   </div>
 </div>
 @endsection

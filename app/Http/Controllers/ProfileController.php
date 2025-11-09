@@ -59,7 +59,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'Profil berhasil diperbarui!');
+        return Redirect::route('profile.edit')->with('success', 'Profil berhasil diperbarui!');
     }
 
 
@@ -99,7 +99,6 @@ class ProfileController extends Controller
             ->pluck('users.id')
             ->search($user->id) + 1;
 
-        // Status follow
         $isFollowing = false;
         if (auth()->check() && !$isOwner) {
             $isFollowing = auth()->user()

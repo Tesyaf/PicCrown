@@ -19,6 +19,9 @@ use App\Http\Controllers\DashboardController;
 */
 
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
     return view('welcome');
 });
 

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 
 class Photo extends Model
 {
@@ -56,4 +57,28 @@ class Photo extends Model
             return '';
         }
     }
+    public function getPreviewUrlAttribute()
+    {
+        try {
+            $decrypted = $this->encrypted_path; // hasil getter
+            $previewPath = 'storage/previews/' . basename($decrypted);
+            $fallback = asset('images/fallback-photo.png');
+
+            return file_exists(public_path($previewPath))
+                ? asset($previewPath)
+                : $fallback;
+        } catch (\Throwable $e) {
+            logger()->warning("Gagal membuat preview: {$e->getMessage()}");
+            return asset('images/fallback-photo.png');
+        }
+    }
+
+    public function getFullImageUrlAttribute()
+    {
+        $decrypted = $this->encrypted_path;
+        return Storage::disk('public')->exists($decrypted)
+            ? asset('storage/' . $decrypted)
+            : asset('images/fallback-photo.png');
+    }
+
 }

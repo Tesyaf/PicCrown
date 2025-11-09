@@ -18,14 +18,14 @@ class FollowController extends Controller
         $me = $request->user();
 
         if ($me->id === $user->id) {
-            return back()->with('status', 'Kamu tidak bisa mengikuti diri sendiri.');
+            return back()->with('error', 'Kamu tidak bisa mengikuti diri sendiri.');
         }
 
         if (! $me->following()->where('followed_user_id', $user->id)->exists()) {
             $me->following()->attach($user->id);
         }
 
-        return back()->with('status', 'Berhasil mengikuti '.$user->name.'.');
+        return back()->with('success', 'Berhasil mengikuti '.$user->name.'.');
     }
 
     // Unfollow user
@@ -35,6 +35,6 @@ class FollowController extends Controller
 
         $me->following()->detach($user->id);
 
-        return back()->with('status', 'Berhenti mengikuti '.$user->name.'.');
+        return back()->with('success', 'Berhenti mengikuti '.$user->name.'.');
     }
 }

@@ -30,7 +30,7 @@ class GoogleController extends Controller
             ]);
 
             Auth::login($user);
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard')->with('success', 'Berhasil login dengan Google! Selamat datang ' . $user->name . '!');
         } catch (\Throwable $e) {
             return redirect()->route('login')->with('error', 'Gagal login dengan Google.');
         }
