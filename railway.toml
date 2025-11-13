@@ -1,0 +1,31 @@
+[build]
+builder = "nixpacks"
+
+[phases.setup]
+nixPkgs = [
+  "php83",
+  "php83Extensions.pdo_pgsql",
+  "php83Extensions.pgsql",
+  "php83Extensions.openssl",
+  "php83Extensions.fileinfo",
+  "php83Extensions.mbstring",
+  "php83Extensions.tokenizer",
+  "php83Extensions.xml",
+  "php83Extensions.curl",
+  "nodejs_22",
+  "pnpm"
+]
+
+[phases.install]
+cmds = [
+  "composer install --no-dev --optimize-autoloader",
+  "pnpm install"
+]
+
+[phases.build]
+cmds = [
+  "pnpm run build"
+]
+
+[start]
+cmd = "php artisan migrate --force && php artisan config:cache && php artisan route:cache && php -S 0.0.0.0:8080 -t public"

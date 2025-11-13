@@ -15,7 +15,7 @@
     </form>
 
     {{-- Profil kanan atas --}}
-    <a href="{{ route('profile.public', Auth::user()->id) }}" class="hidden md:flex items-center gap-3">
+    <a href="{{ route('users.show', Auth::user()->id) }}" class="hidden md:flex items-center gap-3">
       <img
         src="{{ Auth::user()->avatar_url ? asset('storage/'.Auth::user()->avatar_url) : asset('images/default-avatar.png') }}"
         class="w-10 h-10 rounded-full border-2 border-orange-300 shadow"
