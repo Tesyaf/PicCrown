@@ -132,19 +132,26 @@
       @endif
     </div>
 
-    {{-- Tab Disukai --}}
     <div x-show="tab==='likes'" x-cloak x-transition.opacity.duration.300ms>
       @if($isOwner)
-      <div class="rounded-2xl border border-amber-100/70 bg-white/70 backdrop-blur-sm p-10 text-center">
-        <h3 class="text-xl font-extrabold mb-1">Foto yang Kamu Sukai</h3>
-        <p class="text-neutral-600">Saat kamu menyukai foto, foto-foto favoritmu akan tampil di sini.</p>
+      <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        @forelse($likedPhotos as $photo)
+        <a href="{{ route('photos.show', $photo->id) }}"
+          class="group rounded-2xl border border-amber-100/70 overflow-hidden bg-white shadow hover:shadow-lg transition">
+          <img src="{{ $photo->preview_url }}"
+            class="aspect-[4/3] object-cover w-full h-full group-hover:scale-105 transition">
+        </a>
+        @empty
+        <p class="text-neutral-600 text-center w-full py-10">Belum ada foto yang kamu sukai.</p>
+        @endforelse
       </div>
       @else
-      <div class="rounded-2xl border border-amber-100/70 bg-white/70 backdrop-blur-sm p-8 text-center text-neutral-600">
+      <div class="rounded-2xl border border-amber-100/70 bg-white/70 p-8 text-center text-neutral-600">
         Tab ini bersifat privat.
       </div>
       @endif
     </div>
+
 
     {{-- Tab Tentang --}}
     <div x-show="tab==='about'" x-cloak x-transition.opacity.duration.300ms>

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Laravel\Facades\Image;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
@@ -24,22 +23,26 @@ class PhotoController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        // Simpan file utama ke storage
+        // Simpan file utama
         $rawPath = $request->file('photo')->store('photos', 'public');
 
-        // Buat thumbnail preview (tidak dienkripsi)
+        // ---- Buat preview ----
         $previewPath = 'previews/' . basename($rawPath);
-        $image = Image::make($request->file('photo'))
-            ->resize(480, null, fn($constraint) => $constraint->aspectRatio())
-            ->encode('jpg', 70);
-        Storage::disk('public')->put($previewPath, $image);
 
-        // Simpan path terenkripsi ke database
+        $manager = new ImageManager(new Driver());
+
+        $image = $manager->read($request->file('photo'))
+            ->scale(width: 480)        // scale menjaga aspect ratio otomatis
+            ->encodeByExtension('jpg', quality: 70);
+
+        Storage::disk('public')->put($previewPath, (string)$image);
+
+        // Simpan data (path akan otomatis dienkripsi oleh mutator)
         Photo::create([
             'user_id' => auth()->id(),
             'title' => $request->title,
             'description' => $request->description,
-            'encrypted_path' => $rawPath, // akan otomatis terenkripsi oleh mutator
+            'encrypted_path' => $rawPath,
         ]);
 
         return redirect()
@@ -81,16 +84,21 @@ class PhotoController extends Controller
 
         $data = $request->only(['title', 'description']);
 
-        // Jika user upload file baru
+        // Jika upload foto baru
         if ($request->hasFile('photo')) {
-            $oldDecryptedPath = $photo->encrypted_path;
-            if ($oldDecryptedPath && Storage::disk('public')->exists($oldDecryptedPath)) {
-                Storage::disk('public')->delete($oldDecryptedPath);
-                Storage::disk('public')->delete('previews/' . basename($oldDecryptedPath));
+
+            $oldPath = $photo->encrypted_path; // sudah didekripsi oleh accessor
+
+            // Hapus file lama + preview
+            if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+                Storage::disk('public')->delete('previews/' . basename($oldPath));
             }
 
+            // Simpan foto baru
             $newPath = $request->file('photo')->store('photos', 'public');
 
+            // Buat preview baru
             $previewPath = 'previews/' . basename($newPath);
 
             $manager = new ImageManager(new Driver());
@@ -99,8 +107,9 @@ class PhotoController extends Controller
                 ->scale(width: 480)
                 ->encodeByExtension('jpg', quality: 70);
 
-            Storage::disk('public')->put($previewPath, (string) $image);
+            Storage::disk('public')->put($previewPath, (string)$image);
 
+            // Simpan path baru (dienkripsi otomatis)
             $data['encrypted_path'] = $newPath;
         }
 
@@ -115,8 +124,8 @@ class PhotoController extends Controller
     {
         $this->authorize('delete', $photo);
 
-        // Hapus file dan preview lama berdasarkan hasil dekripsi
-        $decryptedPath = $photo->encrypted_path; // getter otomatis decrypt
+        // Ambil path decrypted
+        $decryptedPath = $photo->encrypted_path;
 
         if ($decryptedPath && Storage::disk('public')->exists($decryptedPath)) {
             Storage::disk('public')->delete($decryptedPath);
@@ -127,6 +136,6 @@ class PhotoController extends Controller
 
         return redirect()
             ->route('dashboard')
-            ->with('success', 'Foto berhasil dihapus.');
+            ->with('success', 'Foto berhasil dihapus!');
     }
 }

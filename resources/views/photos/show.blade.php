@@ -104,13 +104,40 @@
             </div>
           </div>
 
-          <!-- Edit Form -->
           <form x-show="showEdit" x-collapse x-transition
-            action="{{ route('ratings.update', $comment->id) }}" method="POST" class="mt-4 space-y-3">
-            @csrf @method('PUT')
-            <textarea name="comment" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400">{{ $comment->encrypted_comment }}</textarea>
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-blue-600">Simpan</button>
-          </form>
+              action="{{ route('ratings.update', $comment->id) }}" method="POST" class="mt-4 space-y-3">
+          @csrf
+          @method('PUT')
+
+          <!-- ⭐ EDIT RATING -->
+          <div x-data="{ rating: {{ $comment->score ?? 0 }} }" class="flex items-center gap-2 mb-2">
+            <template x-for="i in 5">
+              <svg @click="rating = i"
+                  :class="i <= rating ? 'text-orange-500 scale-110' : 'text-gray-300'"
+                  class="w-7 h-7 cursor-pointer transition-all transform duration-200"
+                  fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 
+        0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.457a1 1 0 
+        00-.364 1.118l1.286 3.967c.3.921-.755 1.688-1.54 
+        1.118l-3.38-2.457a1 1 0 00-1.175 
+        0l-3.38 2.457c-.784.57-1.838-.197-1.54-1.118l1.286-3.967a1 
+        1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 
+        1 0 00.95-.69l1.286-3.967z"/>
+              </svg>
+            </template>
+            <input type="hidden" name="score" x-model="rating">
+          </div>
+
+          <!-- 📝 EDIT KOMENTAR -->
+          <textarea name="comment" rows="2"
+                    class="w-full px-3 py-2 rounded-lg border border-gray-300 
+        focus:ring-2 focus:ring-blue-400">{{ $comment->encrypted_comment }}</textarea>
+
+          <button type="submit"
+                  class="px-4 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-blue-600">
+            Simpan
+          </button>
+        </form>
 
           <!-- Reply Form -->
           <form x-show="showReply" x-collapse x-transition

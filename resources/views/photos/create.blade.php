@@ -14,10 +14,10 @@
       <div class="flex flex-col items-center">
         <div id="preview-container"
              class="w-72 h-72 bg-gray-100 border-2 border-dashed border-amber-300 rounded-2xl flex flex-col justify-center items-center cursor-pointer hover:bg-amber-50 transition"
-             onclick="document.getElementById('photo_file').click()"
+             onclick="document.getElementById('photo').click()"
              ondragover="event.preventDefault(); this.classList.add('bg-amber-50','scale-[1.02]');"
              ondragleave="this.classList.remove('bg-amber-50','scale-[1.02]');"
-             ondrop="event.preventDefault(); document.getElementById('photo_file').files = event.dataTransfer.files; previewFile(event);">
+             ondrop="event.preventDefault(); document.getElementById('photo').files = event.dataTransfer.files; previewFile(event);">
 
           <svg id="camera-icon" xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -28,8 +28,8 @@
           <p id="upload-text" class="mt-2 text-gray-600 text-center">Klik atau seret foto ke sini</p>
           <img id="preview-image" class="hidden object-cover w-full h-full rounded-2xl" />
         </div>
-        <input type="file" name="photo_file" id="photo_file" accept="image/*" required class="hidden" onchange="previewFile(event)">
-        @error('photo_file')<p class="text-sm text-red-500 mt-2">{{ $message }}</p>@enderror
+        <input type="file" name="photo" id="photo" accept="image/*" required class="hidden" onchange="previewFile(event)">
+        @error('photo')<p class="text-sm text-red-500 mt-2">{{ $message }}</p>@enderror
       </div>
 
       <!-- Judul -->

@@ -122,10 +122,24 @@ class ProfileController extends Controller
             ->join('ratings', 'ratings.photo_id', '=', 'photos.id')
             ->count();
 
+        $likedPhotos = $user->ratings()
+            ->where('score', '>=', 4)
+            ->with('photo')
+            ->get()
+            ->pluck('photo')
+            ->unique('id');
+
         return view('profile.public', compact(
-            'user', 'photos', 'avgScore', 'rank',
-            'isOwner', 'isFollowing',
-            'totalLikes', 'totalComments', 'totalRatings'
+            'user',
+            'photos',
+            'avgScore',
+            'rank',
+            'isOwner',
+            'isFollowing',
+            'totalLikes',
+            'totalComments',
+            'totalRatings',
+            'likedPhotos'
         ));
     }
 }
