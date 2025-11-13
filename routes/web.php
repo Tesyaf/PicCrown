@@ -28,18 +28,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
-
-Route::post('/email/verify', [VerifyEmailController::class, 'verify'])
-    ->middleware('auth')
-    ->name('verification.verify');
-
-Route::get('/email/verify/resend', [VerifyEmailController::class, 'resend'])
-    ->middleware('auth')
-    ->name('verification.resend');
-
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('auth.google');
 Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'callback']);
 
