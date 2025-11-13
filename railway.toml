@@ -1,31 +1,27 @@
 [build]
 builder = "nixpacks"
 
+# Pakai Node.js versi 22 (cocok untuk Vite 7, Tailwind 4, React 19)
 [phases.setup]
 nixPkgs = [
+  "nodejs_22",
+  "pnpm",
   "php83",
   "php83Extensions.pdo_pgsql",
   "php83Extensions.pgsql",
-  "php83Extensions.openssl",
   "php83Extensions.fileinfo",
   "php83Extensions.mbstring",
+  "php83Extensions.openssl",
   "php83Extensions.tokenizer",
   "php83Extensions.xml",
   "php83Extensions.curl",
-  "nodejs_22",
-  "pnpm"
+  "php83Extensions.zip"
 ]
 
-[phases.install]
-cmds = [
-  "composer install --no-dev --optimize-autoloader",
-  "pnpm install"
-]
-
+# Build frontend
 [phases.build]
-cmds = [
-  "pnpm run build"
-]
+cmd = "pnpm install && pnpm run build"
 
+# Serve Laravel dengan PHP FPM + built static files
 [start]
-cmd = "php artisan migrate --force && php artisan config:cache && php artisan route:cache && php -S 0.0.0.0:8080 -t public"
+cmd = "php artisan migrate --force && php -S 0.0.0.0:${PORT} -t public"
