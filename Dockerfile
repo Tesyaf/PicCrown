@@ -7,7 +7,7 @@ RUN npm install
 
 COPY resources ./resources
 COPY vite.config.js .
-COPY postcss.config.js .
+COPY postcss.config.cjs .
 COPY tailwind.config.js .
 
 RUN npm run build
