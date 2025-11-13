@@ -1,48 +1,44 @@
-# -------------------------
-# Stage 1: Build Frontend
-# -------------------------
-FROM node:20 AS build
-
+# ---------- Stage 1: Build assets ----------
+FROM node:20 AS assets
 WORKDIR /app
-COPY package.json pnpm-lock.yaml* package-lock.json* yarn.lock* ./
 
-# Install dependencies sesuai package manager
-RUN if [ -f pnpm-lock.yaml ]; then \
-      npm install -g pnpm && pnpm install; \
-    elif [ -f yarn.lock ]; then \
-      yarn install; \
-    else \
-      npm install; \
-    fi
+COPY package.json package-lock.json* ./
+RUN npm install
 
-COPY . .
-RUN if [ -f pnpm-lock.yaml ]; then pnpm run build; \
-    elif [ -f yarn.lock ]; then yarn build; \
-    else npm run build; fi
+COPY resources ./resources
+COPY vite.config.js .
+COPY postcss.config.js .
+COPY tailwind.config.js .
+
+RUN npm run build
 
 
-# -------------------------
-# Stage 2: PHP Runtime
-# -------------------------
+# ---------- Stage 2: PHP ----------
 FROM php:8.3-fpm
 
-# Install sistem essentials
+# Install deps
 RUN apt-get update && apt-get install -y \
-    unzip git libpq-dev libzip-dev libpng-dev \
-    && docker-php-ext-install pdo pdo_pgsql pdo_mysql zip gd
-
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+    libpq-dev unzip git curl \
+    && docker-php-ext-install pdo pdo_pgsql
 
 WORKDIR /var/www
 
-# Copy Laravel
+# Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Copy project
 COPY . .
 
-# ENV Laravel
+# Copy built assets
+COPY --from=assets /app/public/build ./public/build
+
+# Install backend deps
 RUN composer install --no-dev --optimize-autoloader
 
-# Copy assets hasil build
-COPY --from=build /app/public/build ./public/build
+# Laravel optimize
+RUN php artisan key:generate --force
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
 
-CMD ["php-fpm"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
