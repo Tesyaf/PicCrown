@@ -59,12 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/photos/{photo}/ratings', [RatingController::class, 'store'])->name('ratings.store');
     Route::delete('/ratings/{rating}', [RatingController::class, 'destroy'])->name('ratings.destroy');
     Route::put('/ratings/{rating}', [RatingController::class, 'update'])->name('ratings.update');
-    Route::get('/users/{user}/profile', [ProfileController::class, 'viewPublicProfile'])->name('profile.public');
-
-    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-
+    
     Route::post('/users/{user}/follow', [App\Http\Controllers\FollowController::class, 'store'])->name('users.follow');
     Route::delete('/users/{user}/unfollow', [App\Http\Controllers\FollowController::class, 'destroy'])->name('users.unfollow');
 });
