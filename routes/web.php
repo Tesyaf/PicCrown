@@ -6,6 +6,7 @@ use App\Http\Controllers\RatingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
+use App\Models\Photo;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,9 @@ Route::get('/', function () {
     if (Auth::check()) {
         return redirect()->route('dashboard');
     }
-    return view('welcome');
+        return view('welcome', [
+        'previews' => Photo::latest()->take(8)->get(),
+    ]);
 });
 
 Route::get('/email/verify', function () {

@@ -93,19 +93,42 @@
   </section>
 
   {{-- GALLERY PREVIEW --}}
-  <section class="mx-auto max-w-6xl px-6 py-14">
-    <h2 class="text-3xl font-extrabold text-center mb-10">Sorotan Komunitas</h2>
-    <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      @foreach(range(1,8) as $i)
-      <div class="group relative overflow-hidden aspect-[4/3] rounded-2xl bg-gradient-to-br from-yellow-100 via-amber-100 to-orange-100 border border-amber-100/70 flex items-center justify-center font-semibold text-amber-700 shadow hover:shadow-xl hover:scale-[1.02] transition">
-        Preview {{ $i }}
-        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-sm">
+<section class="mx-auto max-w-6xl px-6 py-14">
+  <h2 class="text-3xl font-extrabold text-center mb-10">Sorotan Komunitas</h2>
+
+  <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+
+    @forelse ($previews as $photo)
+      <a href="{{ route('photos.show', $photo->id) }}"
+         class="group relative overflow-hidden aspect-[4/3] rounded-2xl
+                bg-gradient-to-br from-yellow-100 via-amber-100 to-orange-100
+                border border-amber-100/70 shadow hover:shadow-xl hover:scale-[1.02] transition">
+
+        {{-- Lazy preview --}}
+        <img src="{{ $photo->preview_url }}"
+             alt="{{ $photo->title }}"
+             class="w-full h-full object-cover opacity-0 transition-opacity duration-700 group-hover:scale-105"
+             loading="lazy"
+             decoding="async"
+             onload="this.classList.remove('opacity-0')"
+             onerror="this.src='{{ asset('images/fallback-photo.png') }}';">
+
+        {{-- Layer hover --}}
+        <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 
+                    transition flex items-center justify-center text-white text-sm font-semibold">
           <span>Lihat Detail</span>
         </div>
+      </a>
+
+    @empty
+      <div class="col-span-4 text-center text-gray-600 py-10">
+        Belum ada foto yang diunggah 📷
       </div>
-      @endforeach
-    </div>
-  </section>
+    @endforelse
+
+  </div>
+</section>
+
 
   {{-- CTA --}}
   <section id="get-started" class="relative overflow-hidden">

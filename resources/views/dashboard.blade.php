@@ -6,7 +6,7 @@
 <div class="grid gap-8">
   {{-- Search bar --}}
   <div class="flex justify-between items-center">
-    <form action="{{ route('dashboard') }}" method="GET" class="relative w-full max-w-md">
+    <form action="{{ route('dashboard') }}" method="GET" class="relative w-full max-w-2xl lg:max-w-3xl">
       <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
       <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari foto..."
         class="w-full pl-11 pr-4 py-2 rounded-xl bg-white/80 border border-white/40 
